@@ -97,6 +97,9 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
       this.ball.body.velocity.y += this.movementForce;
     }
 
+    // This will tell the framework to execute the wallCollision function when the ball hits any of the walls. We can use the wallCollision function to add any functionality we want like playing the bounce sound and implementing the Vibration API.    
+    this.physics.arcade.collide(this.ball, this.borderGroup, this.wallCollision, null, this);
+    this.physics.arcade.collide(this.ball, this.levels[this.level-1], this.wallCollision, null, this);    
   },
   wallCollision: function () { }, // wallCollision is executed when the ball hits the walls or other objects
   handleOrientation: function (e) { // handleOrientation is the function bound to the event responsible for the Device Orientation API, providing the motion controls when the game is running on a mobile device with appropriate hardware
