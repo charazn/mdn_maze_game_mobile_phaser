@@ -10,9 +10,15 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
 
     this.keys = this.game.input.keyboard.createCursorKeys(); // Add the ability to control the ball with the keyboard on the desktop devices
     // There is the Phaser function called createCursorKeys(), which will give us an object with event handlers for the four arrow keys to play with: up, down, left and right.
-    
+
     // The most interesting part of the game is its usage of the Device Orientation API for control on mobile devices. Thanks to this you can play the game by tilting the device in the direction you want the ball to roll.
     window.addEventListener("deviceorientation", this.handleOrientation, true); // Adding an event listener to the "deviceorientation" event and binding the handleOrientation function
+
+    // The hole’s body will not move when we hit it with the ball and will have the collision detection calculated (which will be discussed later on)    
+    this.hole = this.add.sprite(Ball._WIDTH * 0.5, 90, 'hole');
+    this.physics.enable(this.hole, Phaser.Physics.ARCADE);
+    this.hole.anchor.set(0.5);
+    this.hole.body.setSize(2, 2);
   },
   initLevels: function () { }, // initLevels initializes the level data
   showLevel: function (level) { }, // showLevel prints the level data on the screen
@@ -34,7 +40,7 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
       this.ball.body.velocity.y += this.movementForce;
     }
 
-  }, 
+  },
   wallCollision: function () { }, // wallCollision is executed when the ball hits the walls or other objects
   handleOrientation: function (e) { // handleOrientation is the function bound to the event responsible for the Device Orientation API, providing the motion controls when the game is running on a mobile device with appropriate hardware
     // The more you tilt the device, the more force is applied to the ball, therefore the faster it moves (the velocity is higher).
@@ -42,6 +48,6 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     var y = e.beta;
     Ball._player.body.velocity.x += x;
     Ball._player.body.velocity.y += y;
-  }, 
+  },
   finishLevel: function () { } // finishLevel loads a new level when the current level is completed, or finished the game if the final level is completed
 };
