@@ -22,12 +22,12 @@
   <script>
     (function() {
     var game = new Phaser.Game(320, 480, Phaser.CANVAS, 'game'); // Or manually <canvas id='game' width='320' height='480'></canvas>
-    game.state.add('Boot', Ball.Boot);
-    game.state.add('Preloader', Ball.Preloader);
-    game.state.add('MainMenu', Ball.MainMenu);
-    game.state.add('Howto', Ball.Howto);
-    game.state.add('Game', Ball.Game);
-    game.state.start('Boot');
+    game.state.add('Boot', Ball.Boot); // Boot will take care of initializing a few settings. The first value is the name of the state and the second one is the object we want to assign to it
+    game.state.add('Preloader', Ball.Preloader); // Preloader will load all of the assets like graphics and audio
+    game.state.add('MainMenu', Ball.MainMenu); // MainMenu is the menu with the start button
+    game.state.add('Howto', Ball.Howto); // Howto shows the "how to play" instructions
+    game.state.add('Game', Ball.Game); // The Game state lets you actually play the game
+    game.state.start('Boot'); // The start method is starting the given state and making it active
     })();
   </script>
 </body>
