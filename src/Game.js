@@ -107,6 +107,9 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     if (this.audioStatus) {
       this.bounceSound.play();
     }
+    if ("vibrate" in window.navigator) { // If the vibrate method is supported by the browser and available in the window.navigator object, vibrate the phone for 100 miliseconds.
+      window.navigator.vibrate(100);
+    }
   }, // wallCollision is executed when the ball hits the walls or other objects
   handleOrientation: function (e) { // handleOrientation is the function bound to the event responsible for the Device Orientation API, providing the motion controls when the game is running on a mobile device with appropriate hardware
     // The more you tilt the device, the more force is applied to the ball, therefore the faster it moves (the velocity is higher).
