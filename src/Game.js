@@ -87,11 +87,11 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     }
     this.levels[lvl - 1].visible = true;
   },
-  updateCounter: function () {
+  updateCounter: function () { // updateCounter updates the time spent playing each level and records the total time spent playing the game
     this.timer++;
     this.timerText.setText("Time: " + this.timer);
     this.totalTimeText.setText("Total time: " + (this.totalTimer + this.timer));
-  }, // updateCounter updates the time spent playing each level and records the total time spent playing the game
+  },
   managePause: function () { }, // managePause pauses and resumes the game
   manageAudio: function () { }, // manageAudio turns the audio on and off
   update: function () { // The update() function is executed at every frame, which updates things such as the ball position
@@ -112,6 +112,8 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     // This will tell the framework to execute the wallCollision function when the ball hits any of the walls. We can use the wallCollision function to add any functionality we want like playing the bounce sound and implementing the Vibration API.    
     this.physics.arcade.collide(this.ball, this.borderGroup, this.wallCollision, null, this);
     this.physics.arcade.collide(this.ball, this.levels[this.level - 1], this.wallCollision, null, this);
+
+    this.physics.arcade.overlap(this.ball, this.hole, this.finishLevel, null, this);
   },
   wallCollision: function () {
     if (this.audioStatus) {
@@ -128,5 +130,24 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     Ball._player.body.velocity.x += x;
     Ball._player.body.velocity.y += y;
   },
-  finishLevel: function () { } // finishLevel loads a new level when the current level is completed, or finished the game if the final level is completed
+  finishLevel: function () {
+    if (this.level >= this.maxLevels) {
+      this.totalTimer += this.timer;
+      alert('Congratulations, game completed!\nTotal time of play: ' + this.totalTimer + ' seconds!');
+      this.game.state.start('MainMenu');
+    } else {
+      alert('Congratulations, level ' + this.level + ' completed!');
+      this.totalTimer += this.timer;
+      this.timer = 0;
+      this.level++;
+      this.timerText.setText("Time: " + this.timer);
+      this.totalTimeText.setText("Total time: " + this.totalTimer);
+      this.levelText.setText("Level: " + this.level + " / " + this.maxLevels);
+      this.ball.body.x = this.ballStartPos.x;
+      this.ball.body.y = this.ballStartPos.y;
+      this.ball.body.velocity.x = 0;
+      this.ball.body.velocity.y = 0;
+      this.showLevel();
+    }
+  } // finishLevel loads a new level when the current level is completed, or finished the game if the final level is completed
 };
