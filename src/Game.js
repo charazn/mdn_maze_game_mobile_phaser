@@ -19,6 +19,8 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     this.physics.enable(this.hole, Phaser.Physics.ARCADE);
     this.hole.anchor.set(0.5);
     this.hole.body.setSize(2, 2);
+
+    this.bounceSound = this.game.add.audio('audio-bounce');
   },
   initLevels: function () { // initLevels initializes the level data
     this.levels = [];
@@ -99,9 +101,13 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
 
     // This will tell the framework to execute the wallCollision function when the ball hits any of the walls. We can use the wallCollision function to add any functionality we want like playing the bounce sound and implementing the Vibration API.    
     this.physics.arcade.collide(this.ball, this.borderGroup, this.wallCollision, null, this);
-    this.physics.arcade.collide(this.ball, this.levels[this.level-1], this.wallCollision, null, this);    
+    this.physics.arcade.collide(this.ball, this.levels[this.level - 1], this.wallCollision, null, this);
   },
-  wallCollision: function () { }, // wallCollision is executed when the ball hits the walls or other objects
+  wallCollision: function () {
+    if (this.audioStatus) {
+      this.bounceSound.play();
+    }
+  }, // wallCollision is executed when the ball hits the walls or other objects
   handleOrientation: function (e) { // handleOrientation is the function bound to the event responsible for the Device Orientation API, providing the motion controls when the game is running on a mobile device with appropriate hardware
     // The more you tilt the device, the more force is applied to the ball, therefore the faster it moves (the velocity is higher).
     var x = e.gamma;
