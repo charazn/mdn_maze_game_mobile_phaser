@@ -20,8 +20,65 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     this.hole.anchor.set(0.5);
     this.hole.body.setSize(2, 2);
   },
-  initLevels: function () { }, // initLevels initializes the level data
-  showLevel: function (level) { }, // showLevel prints the level data on the screen
+  initLevels: function () { // initLevels initializes the level data
+    this.levels = [];
+    // To hold the block information we'll use a level data array: for each block we'll store the top and left absolute positions in pixels (x and y) and the type of the block — horizontal or vertical (t with the 'w' value meaning width and 'h' meaning height)
+    this.levelData = [
+      [
+        { x: 96, y: 224, t: 'w' }
+      ],
+      [
+        { x: 72, y: 320, t: 'w' },
+        { x: 200, y: 320, t: 'h' },
+        { x: 72, y: 150, t: 'w' }
+      ],
+      [
+        { x: 64, y: 352, t: 'h' },
+        { x: 224, y: 352, t: 'h' },
+        { x: 0, y: 240, t: 'w' },
+        { x: 128, y: 240, t: 'w' },
+        { x: 200, y: 52, t: 'h' }
+      ],
+      [
+        { x: 78, y: 352, t: 'h' },
+        { x: 78, y: 320, t: 'w' },
+        { x: 0, y: 240, t: 'w' },
+        { x: 192, y: 240, t: 'w' },
+        { x: 30, y: 150, t: 'w' },
+        { x: 158, y: 150, t: 'w' }
+      ],
+      [
+        { x: 188, y: 352, t: 'h' },
+        { x: 92, y: 320, t: 'w' },
+        { x: 0, y: 240, t: 'w' },
+        { x: 128, y: 240, t: 'w' },
+        { x: 256, y: 240, t: 'h' },
+        { x: 180, y: 52, t: 'h' },
+        { x: 52, y: 148, t: 'w' }
+      ]
+    ];
+    // To load the level we'll parse the data and show the blocks specific for that level, by adding the blocks into a newLevel array
+    for (var i = 0; i < this.maxLevels; i++) {
+      var newLevel = this.add.group(); // First, add.group() is used to create a new group of items
+      newLevel.enableBody = true;
+      newLevel.physicsBodyType = Phaser.Physics.ARCADE; // Then the ARCADE body type is set for that group to enable physics calculations. 
+      for (var e = 0; e < this.levelData[i].length; e++) {
+        var item = this.levelData[i][e];
+        newLevel.create(item.x, item.y, 'element-' + item.t); // The newLevel.create method creates new items in the group with starting left and top positions, and its own image. 
+      }
+      newLevel.setAll('body.immovable', true); // You can use setAll on a group to apply it to all the items in that group.
+      newLevel.visible = false; // The objects are stored in the this.levels array, which is by default invisible.
+      this.levels.push(newLevel);
+    }
+  },
+  showLevel: function (level) { // showLevel prints the level data on the screen
+    // To load specific levels, we make sure the previous levels are hidden, and show the current one:
+    var lvl = level | this.level;
+    if (this.levels[lvl - 2]) {
+      this.levels[lvl - 2].visible = false;
+    }
+    this.levels[lvl - 1].visible = true;
+  },
   updateCounter: function () { }, // updateCounter updates the time spent playing each level and records the total time spent playing the game
   managePause: function () { }, // managePause pauses and resumes the game
   manageAudio: function () { }, // manageAudio turns the audio on and off
