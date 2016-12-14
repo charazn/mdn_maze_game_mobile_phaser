@@ -21,6 +21,12 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     this.hole.body.setSize(2, 2);
 
     this.bounceSound = this.game.add.audio('audio-bounce');
+
+    this.timer = 0; // time elapsed in the current level
+    this.totalTimer = 0; // time elapsed in the whole game
+    this.timerText = this.game.add.text(15, 15, "Time: " + this.timer, this.fontBig);
+    this.totalTimeText = this.game.add.text(120, 30, "Total time: " + this.totalTimer, this.fontSmall);
+    this.time.events.loop(Phaser.Timer.SECOND, this.updateCounter, this);
   },
   initLevels: function () { // initLevels initializes the level data
     this.levels = [];
@@ -81,7 +87,11 @@ Ball.Game.prototype = { // The create and update functions are framework-specifi
     }
     this.levels[lvl - 1].visible = true;
   },
-  updateCounter: function () { }, // updateCounter updates the time spent playing each level and records the total time spent playing the game
+  updateCounter: function () {
+    this.timer++;
+    this.timerText.setText("Time: " + this.timer);
+    this.totalTimeText.setText("Total time: " + (this.totalTimer + this.timer));
+  }, // updateCounter updates the time spent playing each level and records the total time spent playing the game
   managePause: function () { }, // managePause pauses and resumes the game
   manageAudio: function () { }, // manageAudio turns the audio on and off
   update: function () { // The update() function is executed at every frame, which updates things such as the ball position
